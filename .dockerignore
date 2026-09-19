@@ -1,0 +1,9 @@
+node_modules
+.git
+.env
+.env.*
+!.env.example
+.idea
+**/*.md
+prototyp/data/auth.store.json
+prototyp/data/auth.json

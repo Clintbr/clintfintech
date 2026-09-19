@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: clintfintech
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AUTH_ACCOUNTS
+        sync: false

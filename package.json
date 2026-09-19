@@ -1,0 +1,17 @@
+{
+  "name": "clintfintech",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Simulateur de réunion ClintFinTech",
+  "scripts": {
+    "start": "node prototyp/server.js",
+    "dev": "node prototyp/server.js",
+    "auth:env": "node scripts/migrate-auth-to-env.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}
