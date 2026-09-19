@@ -250,7 +250,8 @@ function renderChart(memberId, metrics) {
   const colors = { available: "#315efb", owned: "#16835b", due: "#c33d4f", contributed: "#805ad5" };
   const x = index => 34 + index * (652 / Math.max(points.length - 1, 1));
   const y = value => 228 - ((value - min) / (max - min || 1)) * 184;
-  const grid = [0, 1, 2, 3].map(index => `<line x1="34" y1="${44 + index * 61}" x2="686" y2="${44 + index * 61}" class="chart-grid"/>`).join("");
+  const gridColor = document.documentElement.getAttribute("data-theme") === "dark" ? "#334155" : "#e8ecf4";
+  const grid = [0, 1, 2, 3].map(index => `<line x1="34" y1="${44 + index * 61}" x2="686" y2="${44 + index * 61}" stroke="${gridColor}" stroke-width="1"/>`).join("");
   chart.innerHTML = grid + visible.map(([key]) => `<polyline points="${points.map((point, index) => `${x(index)},${y(point[key] || 0)}`).join(" ")}" fill="none" stroke="${colors[key]}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`).join("");
 }
 function showAuthenticatedView() {
@@ -441,4 +442,10 @@ $("resetBtn").onclick = () => {
 };
 
 initCharterUi();
+initThemeToggle();
+window.addEventListener("themechange", () => {
+  if (!currentUser) return;
+  if (currentUser.role === "ADMIN") render();
+  else renderMemberDashboard();
+});
 bootstrap();

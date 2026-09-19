@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ClintFinTech</title>
   <link rel="stylesheet" href="prototyp/style.css">
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("clintfintech-theme");
+        if (stored === "dark" || stored === "light") {
+          document.documentElement.setAttribute("data-theme", stored);
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      } catch (_) {}
+    })();
+  </script>
 </head>
 <body>
   <header class="topbar">
@@ -12,7 +24,12 @@
       <div class="eyebrow">SIMULATEUR DE RÉUNION</div>
         <h1>ClintFinTech</h1>
     </div>
-    <div class="status"><span class="dot"></span><span id="phaseLabel">Tour en cours</span></div>
+    <div class="topbar-actions">
+      <button id="themeToggle" class="btn theme-toggle" type="button" aria-pressed="false" aria-label="Changer le thème clair ou sombre" title="Passer en mode sombre">
+        <span class="theme-toggle-icon" aria-hidden="true">☽</span>
+      </button>
+      <div class="status"><span class="dot"></span><span id="phaseLabel">Tour en cours</span></div>
+    </div>
   </header>
 
   <div id="loginScreen" class="login-screen">
@@ -252,6 +269,7 @@
     </div>
   </footer>
 
+  <script src="prototyp/theme.js"></script>
   <script src="prototyp/charter.js"></script>
   <script src="prototyp/app.js"></script>
 </body>
