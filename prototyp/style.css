@@ -891,7 +891,7 @@ input:focus, select:focus {
   position: fixed;
   inset: 0;
   display: none;
-  z-index: 10;
+  z-index: 45;
   align-items: center;
   justify-content: center;
   padding: 20px;
@@ -1408,17 +1408,17 @@ input:focus, select:focus {
 
   .modal-card {
     width: 100%;
-    max-height: 92vh;
+    max-height: min(92dvh, 100%);
     overflow: auto;
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-    padding: 22px;
+    padding: 22px 22px calc(22px + env(safe-area-inset-bottom, 0));
   }
 
   .modal-actions {
     position: sticky;
-    bottom: -20px;
+    bottom: 0;
     background: var(--modal-actions-bg);
-    padding: 14px 0 2px;
+    padding: 14px 0 max(8px, env(safe-area-inset-bottom, 0));
   }
 
   .modal-actions .btn {
