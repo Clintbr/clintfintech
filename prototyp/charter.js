@@ -63,13 +63,13 @@ Capital disponible collectif — somme des available de tous les membres actifs.
 
 Prêts en cours (collectif) — valeur totale due (principal + intérêts cumulés) sur les prêts non remboursés dont l’emprunteur est actif.
 
-Bénéfices réalisés (collectif) — pour chaque membre actif : (total contribué − disponible) ; somme sur tous les actifs. Représente la part du capital sortie de la liquidité (notamment via le financement de prêts) et les effets de valorisation liés aux créances.
+Bénéfices réalisés (collectif) — somme des intérêts effectivement encaissés lors des remboursements. Le principal remboursé ne constitue pas un bénéfice.
 
 Total dû (par membre emprunteur) — somme des montants dus (loanDue) sur ses prêts non remboursés.
 
 Total possédé (par membre) — available + part proportionnelle de chaque prêt en cours (via loan.shares) appliquée au montant total dû de ce prêt. Reflète liquidité + créances détenues sur les emprunts du groupe.
 
-Tour (round) — cycle de simulation ; une réinitialisation remet à zéro apports, prêts et journal du tour, en incrémentant le numéro de tour.
+Tour (round) — cycle de simulation ; une réinitialisation efface le journal du tour et incrémente le numéro de tour. L’administrateur choisit ensuite de remettre à zéro les indicateurs (et les prêts) ou de les conserver pour le tour suivant.
 
 ═══════════════════════════════════════════════════════════════
 5. APPORTS DE CAPITAL
@@ -162,11 +162,11 @@ Espace membre : graphique d’évolution (disponible, total possédé, total dû
 
 Journal : ordre chronologique inverse ; référence unique pour audit de réunion.
 
-Réinitialisation du tour (administrateur, confirmation requise)
+Réinitialisation du tour (administrateur, choix requis)
 • Incrémente le numéro de tour.
-• Remet à zéro available et total_contributed de tous les membres.
-• Efface prêts et journal du tour en cours.
-• Nouvelle entrée de journal « Nouveau tour N ».
+• Efface le journal du tour en cours.
+• Choix des indicateurs : remettre à zéro available et total_contributed (et effacer les prêts), ou conserver les indicateurs et les prêts pour le tour suivant.
+• Nouvelle entrée de journal « Nouveau tour N » avec mention du choix effectué.
 
 ═══════════════════════════════════════════════════════════════
 10. GOUVERNANCE ET BONNES PRATIQUES (RECOMMANDATIONS)
@@ -189,7 +189,7 @@ Part de financement i = available_i / capital disponible collectif (à l’octro
 Intérêts = principal × (taux/100) × périodes
 Dû = principal + intérêts
 Total possédé_i = available_i + Σ (dû_prêt × share_i_prêt)
-Bénéfices réalisés = Σ (total_contributed − available) sur membres actifs
+Bénéfices réalisés = Σ (montant remboursé − principal) pour les prêts remboursés
 
 ═══════════════════════════════════════════════════════════════
 12. ACCEPTATION

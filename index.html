@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ClintFinTech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="prototyp/style.css">
   <script>
     (function () {
@@ -33,18 +36,41 @@
   </header>
 
   <div id="loginScreen" class="login-screen">
-    <div class="login-lock" aria-hidden="true">🔒</div>
-    <form id="loginForm" class="login-card">
-      <p class="eyebrow">ESPACE SÉCURISÉ</p>
-      <h2>Bienvenue sur ClintFinTech</h2>
-      <p class="muted">Connectez-vous pour accéder à votre espace personnel.</p>
-      <label for="loginUsername">Nom d'utilisateur</label>
-      <input id="loginUsername" autocomplete="username" required>
-      <label for="loginPassword">Mot de passe</label>
-      <input id="loginPassword" type="password" autocomplete="current-password" required>
-      <p id="loginError" class="form-error" role="alert"></p>
-      <button class="btn primary full" type="submit">Se connecter</button>
-    </form>
+    <div class="login-stage">
+      <div class="login-brand">
+        <div class="login-lock-wrap" aria-hidden="true">
+          <svg class="login-lock-svg" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="lockGradient" x1="20" y1="10" x2="100" y2="130" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#5b9dff"/>
+                <stop offset="1" stop-color="#0075ff"/>
+              </linearGradient>
+              <filter id="lockGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0075ff" flood-opacity="0.35"/>
+              </filter>
+            </defs>
+            <g filter="url(#lockGlow)">
+              <path class="lock-shackle" d="M36 58V42C36 27.088 48.088 15 63 15C77.912 15 90 27.088 90 42V58" stroke="url(#lockGradient)" stroke-width="10" stroke-linecap="round"/>
+              <rect class="lock-body" x="24" y="58" width="78" height="68" rx="16" fill="url(#lockGradient)"/>
+              <circle class="lock-keyhole" cx="63" cy="88" r="8" fill="rgba(255,255,255,0.35)"/>
+              <rect class="lock-keyhole" x="59" y="88" width="8" height="18" rx="4" fill="rgba(255,255,255,0.35)"/>
+            </g>
+          </svg>
+        </div>
+        <p class="login-brand-name">ClintFinTech</p>
+        <p class="login-brand-tag">Espace sécurisé</p>
+      </div>
+      <form id="loginForm" class="login-card">
+        <h2>Bienvenue</h2>
+        <p class="muted">Connectez-vous pour accéder à votre espace.</p>
+        <label for="loginUsername">Nom d'utilisateur</label>
+        <input id="loginUsername" autocomplete="username" required placeholder="Votre identifiant">
+        <label for="loginPassword">Mot de passe</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="••••••••">
+        <p id="loginError" class="form-error" role="alert"></p>
+        <button id="loginSubmitBtn" class="btn primary full" type="submit">Se connecter</button>
+      </form>
+    </div>
   </div>
 
   <main id="adminView" class="container app-view">
@@ -59,7 +85,7 @@
           <span>Capital total</span>
           <strong id="totalCapital">0,00 $</strong>
         </div>
-        <button id="adminLogoutBtn" class="btn admin-logout" type="button">Déconnexion</button>
+        <button id="adminLogoutBtn" class="btn danger" type="button">Déconnexion</button>
       </div>
     </section>
 
@@ -147,11 +173,11 @@
   <main id="memberView" class="member-view" hidden>
     <section class="member-topbar">
       <div><p class="eyebrow">CLINTFINTECH · ESPACE PERSONNEL</p><h2 id="memberGreeting">Bonjour</h2></div>
-      <div class="member-topbar-actions"><button id="passwordBtn" class="btn">Réinitialiser le mot de passe</button><button id="logoutBtn" class="btn">Déconnexion</button></div>
+      <div class="member-topbar-actions"><button id="passwordBtn" class="btn">Réinitialiser le mot de passe</button><button id="logoutBtn" class="btn danger" type="button">Déconnexion</button></div>
     </section>
     <section class="member-hero">
       <div><p class="eyebrow">VOTRE SITUATION</p><h2>Vos finances, en un regard.</h2><p class="muted">Votre espace est en lecture seule.</p></div>
-      <div class="member-balance"><span>Total possédé</span><strong id="memberOwnedTotal">0,00 $</strong></div>
+      <div class="member-balance"><span>Capital de la réunion</span><strong id="memberOwnedTotal">0,00 $</strong></div>
     </section>
     <section id="memberMetrics" class="member-metrics"></section>
     <section class="member-chart-card">
@@ -201,6 +227,26 @@
       <p id="passwordError" class="form-error" role="alert"></p>
       <div class="modal-actions"><button type="button" class="btn" data-close-password-modal>Annuler</button><button class="btn primary" type="submit">Enregistrer</button></div>
     </form>
+  </div>
+
+  <div id="resetTourModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="resetTourModalTitle">
+    <div class="modal-backdrop" data-close-reset-tour-modal></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">ADMINISTRATION</p>
+          <h3 id="resetTourModalTitle">Réinitialiser le tour</h3>
+          <p class="muted">Le journal du tour en cours sera effacé et le numéro de tour sera incrémenté.</p>
+        </div>
+        <button type="button" class="icon-btn" aria-label="Fermer" data-close-reset-tour-modal>×</button>
+      </div>
+      <p>Que souhaitez-vous faire des indicateurs des membres (disponible, total contribué) ?</p>
+      <div class="modal-actions reset-tour-actions">
+        <button type="button" class="btn" data-close-reset-tour-modal>Annuler</button>
+        <button type="button" id="resetTourKeepBtn" class="btn primary">Conserver les indicateurs</button>
+        <button type="button" id="resetTourZeroBtn" class="btn danger">Remettre à zéro</button>
+      </div>
+    </div>
   </div>
 
   <div id="memberModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="memberModalTitle">

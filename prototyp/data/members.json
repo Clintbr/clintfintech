@@ -13,8 +13,8 @@
     "name": "Clint Nguena",
     "profession": "ÉTUDIANT",
     "status": "ACTIF",
-    "available": 0,
-    "total_contributed": 0
+    "available": 500,
+    "total_contributed": 500
   },
   {
     "id": 2,

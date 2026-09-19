@@ -82,7 +82,7 @@ function availableTotal() {
   return activeMembers().reduce((s, m) => s + m.available, 0);
 }
 function totalCapital() {
-  return activeMembers().reduce((s, m) => s + m.total_contributed, 0);
+  return activeMembers().reduce((s, m) => s + m.total_contributed, 0) + profits();
 }
 function outstanding() {
   return state.loans
@@ -90,7 +90,11 @@ function outstanding() {
     .reduce((s, l) => s + loanDue(l), 0);
 }
 function profits() {
-  return activeMembers().reduce((s, m) => s + (m.total_contributed - m.available), 0);
+  // Le principal n'est pas un bénéfice : seuls les intérêts déjà encaissés
+  // lors d'un remboursement comptent comme bénéfices réalisés.
+  return state.loans
+    .filter(loan => loan.repaid)
+    .reduce((sum, loan) => sum + Math.max(0, (Number(loan.repaidAmount) || 0) - loan.amount), 0);
 }
 function loanInterestPeriods(loan, now = new Date()) {
   const startedAt = new Date(loan.createdAt);
@@ -217,7 +221,7 @@ function renderMemberDashboard() {
   const member = state.members.find(item => item.id === currentUser?.memberId);
   if (!member) return;
   $("memberGreeting").textContent = `Bonjour ${member.name}`;
-  $("memberOwnedTotal").textContent = money(memberOwned(member));
+  $("memberOwnedTotal").textContent = money(totalCapital());
   const metrics = [
     ["available", "Disponible", member.available],
     ["owned", "Total possédé", memberOwned(member)],
@@ -247,36 +251,75 @@ function renderChart(memberId, metrics) {
   const values = points.flatMap(point => visible.map(([key]) => point[key] || 0));
   const min = Math.min(...values, 0);
   const max = Math.max(...values, 1);
-  const colors = { available: "#315efb", owned: "#16835b", due: "#c33d4f", contributed: "#805ad5" };
+  const colors = { available: "#0075ff", owned: "#00b67a", due: "#ff4d6a", contributed: "#805ad5" };
   const x = index => 34 + index * (652 / Math.max(points.length - 1, 1));
   const y = value => 228 - ((value - min) / (max - min || 1)) * 184;
   const gridColor = document.documentElement.getAttribute("data-theme") === "dark" ? "#334155" : "#e8ecf4";
   const grid = [0, 1, 2, 3].map(index => `<line x1="34" y1="${44 + index * 61}" x2="686" y2="${44 + index * 61}" stroke="${gridColor}" stroke-width="1"/>`).join("");
   chart.innerHTML = grid + visible.map(([key]) => `<polyline points="${points.map((point, index) => `${x(index)},${y(point[key] || 0)}`).join(" ")}" fill="none" stroke="${colors[key]}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`).join("");
 }
-function showAuthenticatedView() {
-  $("loginScreen").hidden = true;
+/** Doit couvrir le délai CSS (ouverture cadenas + ~2 s de pause + fondu). */
+const LOGIN_UNLOCK_MS = 3650;
+
+function revealAppViews() {
   const isAdmin = currentUser.role === "ADMIN";
   $("adminView").hidden = !isAdmin;
   $("memberView").hidden = isAdmin;
   if (isAdmin) render();
   else renderMemberDashboard();
 }
+
+function playLoginUnlockAnimation() {
+  return new Promise(resolve => {
+    const screen = $("loginScreen");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      resolve();
+      return;
+    }
+    screen.classList.add("is-unlocking");
+    window.setTimeout(resolve, LOGIN_UNLOCK_MS);
+  });
+}
+
+function showAuthenticatedView(animated = false) {
+  if (animated) {
+    revealAppViews();
+    playLoginUnlockAnimation().then(() => {
+      $("loginScreen").hidden = true;
+      $("loginScreen").classList.remove("is-unlocking");
+    });
+    return;
+  }
+  $("loginScreen").hidden = true;
+  revealAppViews();
+}
+
 async function authenticate(event) {
   event.preventDefault();
   $("loginError").textContent = "";
+  const submitBtn = $("loginSubmitBtn");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Connexion…";
   try {
     const response = await fetch("/api/auth/login", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: $("loginUsername").value.trim(), password: $("loginPassword").value }) });
-    if (!response.ok) return $("loginError").textContent = (await response.json()).error;
+    if (!response.ok) {
+      $("loginError").textContent = (await response.json()).error;
+      return;
+    }
     const login = await response.json();
     const { state: savedState, ...session } = login;
     currentUser = session;
     hydrateState(savedState);
     stateReady = true;
-    showAuthenticatedView();
+    showAuthenticatedView(true);
   } catch (error) {
     console.error("Erreur de connexion :", error);
     $("loginError").textContent = "Connexion impossible. Vérifiez que le serveur est lancé puis réessayez.";
+  } finally {
+    if (!currentUser) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Se connecter";
+    }
   }
 }
 async function bootstrap() {
@@ -339,6 +382,10 @@ async function logout() {
   currentUser = null;
   stateReady = false;
   $("loginForm").reset();
+  $("loginError").textContent = "";
+  const submitBtn = $("loginSubmitBtn");
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Se connecter";
   $("loginScreen").hidden = false;
   $("memberView").hidden = true;
   $("adminView").hidden = true;
@@ -431,15 +478,33 @@ $("loanBtn").onclick = () => {
 };
 updateLoanRatePreview();
 
-$("resetBtn").onclick = () => {
-  if (!confirm("Réinitialiser complètement le tour ?")) return;
+function openResetTourModal() {
+  $("resetTourModal").classList.add("is-open");
+  $("resetTourModal").setAttribute("aria-hidden", "false");
+}
+function closeResetTourModal() {
+  $("resetTourModal").classList.remove("is-open");
+  $("resetTourModal").setAttribute("aria-hidden", "true");
+}
+function resetTour({ resetCounters }) {
   state.round++;
-  state.members.forEach(m => { m.available = 0; m.total_contributed = 0; });
-  state.loans = [];
+  if (resetCounters) {
+    state.members.forEach(m => { m.available = 0; m.total_contributed = 0; });
+    state.loans = [];
+  }
   state.logs = [];
-  addLog(`Nouveau tour ${state.round}.`);
+  const suffix = resetCounters ? " — indicateurs remis à zéro." : " — indicateurs conservés.";
+  addLog(`Nouveau tour ${state.round}${suffix}`);
+  closeResetTourModal();
   render();
-};
+}
+
+$("resetBtn").onclick = openResetTourModal;
+document.querySelectorAll("[data-close-reset-tour-modal]").forEach(button => {
+  button.onclick = closeResetTourModal;
+});
+$("resetTourZeroBtn").onclick = () => resetTour({ resetCounters: true });
+$("resetTourKeepBtn").onclick = () => resetTour({ resetCounters: false });
 
 initCharterUi();
 initThemeToggle();
