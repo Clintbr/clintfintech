@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClintFinTech</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">SIMULATEUR DE RÉUNION</div>
+        <h1>ClintFinTech</h1>
+    </div>
+    <div class="status"><span class="dot"></span><span id="phaseLabel">Tour en cours</span></div>
+  </header>
+
+  <div id="loginScreen" class="login-screen">
+    <div class="login-lock" aria-hidden="true">🔒</div>
+    <form id="loginForm" class="login-card">
+      <p class="eyebrow">ESPACE SÉCURISÉ</p>
+      <h2>Bienvenue sur ClintFinTech</h2>
+      <p class="muted">Connectez-vous pour accéder à votre espace personnel.</p>
+      <label for="loginUsername">Nom d'utilisateur</label>
+      <input id="loginUsername" autocomplete="username" required>
+      <label for="loginPassword">Mot de passe</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" required>
+      <p id="loginError" class="form-error" role="alert"></p>
+      <button class="btn primary full" type="submit">Se connecter</button>
+    </form>
+  </div>
+
+  <main id="adminView" class="container app-view">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">TOUR ACTUEL</p>
+        <h2 id="roundTitle">Tour 1</h2>
+        <p class="muted">Suivez en temps réel la propriété du capital disponible et du capital total.</p>
+      </div>
+      <div class="hero-actions">
+        <div class="hero-total">
+          <span>Capital total</span>
+          <strong id="totalCapital">0,00 $</strong>
+        </div>
+        <button id="adminLogoutBtn" class="btn admin-logout" type="button">Déconnexion</button>
+      </div>
+    </section>
+
+    <section class="stats">
+      <article><span>Capital disponible</span><strong id="availableCapital">0,00 $</strong></article>
+      <article><span>Prêts en cours</span><strong id="outstandingLoans">0,00 $</strong></article>
+      <article><span>Bénéfices réalisés</span><strong id="profits">0,00 $</strong></article>
+      <article><span>Nombre de membres</span><strong id="memberCount">0</strong></article>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div>
+            <h3>Membres</h3>
+            <p class="muted">Chaque membre possède sa propre part du capital.</p>
+          </div>
+          <button id="addMemberBtn" class="btn primary">+ Ajouter</button>
+        </div>
+        <div id="members"></div>
+      </div>
+
+      <aside class="panel actions">
+        <div class="panel-head">
+          <div>
+            <h3>Opérations</h3>
+            <p class="muted">Toutes les opérations sont enregistrées dans l'ordre.</p>
+          </div>
+        </div>
+
+        <div class="action-block">
+          <label>Ajouter un apport</label>
+          <select id="contributionMember"></select>
+          <div class="inline">
+            <input id="contributionAmount" type="number" min="0" step="0.01" placeholder="Montant">
+            <button id="contributeBtn" class="btn">Ajouter</button>
+          </div>
+        </div>
+
+        <div class="action-block">
+          <label>Accorder un prêt</label>
+          <select id="loanBorrower" aria-label="Membre emprunteur"></select>
+          <input id="loanAmount" type="number" min="0" step="0.01" placeholder="Montant du prêt">
+          <div class="inline">
+            <p id="loanRateHint" class="loan-rate-hint" aria-live="polite">Taux mensuel : saisissez un montant</p>
+            <button id="loanBtn" class="btn">Prêter</button>
+          </div>
+          <p class="hint">Taux mensuel automatique : 5&nbsp;% si le montant est inférieur à 1&nbsp;000&nbsp;$, 3,5&nbsp;% de 1&nbsp;000&nbsp;$ à 9&nbsp;999,99&nbsp;$, 2,5&nbsp;% à partir de 10&nbsp;000&nbsp;$.</p>
+          <p class="hint">Le prêt est financé proportionnellement par le capital disponible de chaque membre.</p>
+        </div>
+
+        <div class="action-block">
+          <label>Rembourser un prêt</label>
+          <select id="repayLoan"></select>
+          <button id="repayBtn" class="btn full">Rembourser</button>
+        </div>
+
+        <div class="action-block">
+          <button id="resetBtn" class="btn danger full">Réinitialiser le tour</button>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Prêts</h3>
+          <p class="muted">Un prêt garde la propriété de son capital jusqu'au remboursement.</p>
+        </div>
+      </div>
+      <div id="loans"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h3>Journal des opérations</h3>
+          <p class="muted">Historique chronologique de la simulation.</p>
+        </div>
+      </div>
+      <div id="log"></div>
+    </section>
+  </main>
+
+  <main id="memberView" class="member-view" hidden>
+    <section class="member-topbar">
+      <div><p class="eyebrow">CLINTFINTECH · ESPACE PERSONNEL</p><h2 id="memberGreeting">Bonjour</h2></div>
+      <div class="member-topbar-actions"><button id="passwordBtn" class="btn">Réinitialiser le mot de passe</button><button id="logoutBtn" class="btn">Déconnexion</button></div>
+    </section>
+    <section class="member-hero">
+      <div><p class="eyebrow">VOTRE SITUATION</p><h2>Vos finances, en un regard.</h2><p class="muted">Votre espace est en lecture seule.</p></div>
+      <div class="member-balance"><span>Total possédé</span><strong id="memberOwnedTotal">0,00 $</strong></div>
+    </section>
+    <section id="memberMetrics" class="member-metrics"></section>
+    <section class="member-chart-card">
+      <div class="panel-head"><div><h3>Évolution de vos finances</h3><p class="muted">Sélectionnez les indicateurs à afficher.</p></div></div>
+      <div id="chartControls" class="chart-controls"></div>
+      <svg id="memberChart" class="member-chart" viewBox="0 0 720 260" role="img" aria-label="Évolution des finances"></svg>
+    </section>
+    <section class="meeting-section">
+      <div class="panel-head"><div><p class="eyebrow">LA RÉUNION</p><h3>État collectif</h3></div></div>
+      <div id="meetingMetrics" class="stats"></div>
+    </section>
+    <section class="member-data-grid">
+      <section class="member-card"><div class="panel-head"><div><h3>Prêts</h3><p class="muted">Tous les prêts de la réunion.</p></div></div><div id="memberLoans"></div></section>
+      <section class="member-card"><div class="panel-head"><div><h3>Journal des opérations</h3><p class="muted">Historique de la réunion.</p></div></div><div id="memberLog"></div></section>
+    </section>
+  </main>
+
+  <div id="charterModal" class="modal modal-charter" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="charterModalTitle">
+    <div class="modal-backdrop" data-close-charter-modal></div>
+    <div class="modal-card charter-modal-card">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">GOUVERNANCE</p>
+          <h3 id="charterModalTitle">Charte financière de la réunion</h3>
+          <p class="muted">Règles, formules et bonnes pratiques ClintFinTech</p>
+        </div>
+        <button type="button" class="icon-btn" aria-label="Fermer" data-close-charter-modal>×</button>
+      </div>
+      <div id="charterContent" class="charter-content" tabindex="-1"></div>
+      <div class="charter-export">
+        <button id="exportCharterTxt" class="btn" type="button">Exporter (.txt)</button>
+        <button id="exportCharterWord" class="btn" type="button">Exporter (.word)</button>
+        <button id="exportCharterWhatsApp" class="btn btn-whatsapp" type="button">WhatsApp</button>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn primary" data-close-charter-modal>Fermer</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="passwordModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+    <div class="modal-backdrop" data-close-password-modal></div>
+    <form id="passwordForm" class="modal-card">
+      <div class="modal-head"><div><p class="eyebrow">SÉCURITÉ</p><h3 id="passwordModalTitle">Réinitialiser le mot de passe</h3></div><button type="button" class="icon-btn" aria-label="Fermer" data-close-password-modal>×</button></div>
+      <label for="newPassword">Nouveau mot de passe</label>
+      <input id="newPassword" type="password" minlength="4" required autocomplete="new-password">
+      <p id="passwordError" class="form-error" role="alert"></p>
+      <div class="modal-actions"><button type="button" class="btn" data-close-password-modal>Annuler</button><button class="btn primary" type="submit">Enregistrer</button></div>
+    </form>
+  </div>
+
+  <div id="memberModal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="memberModalTitle">
+    <div class="modal-backdrop" data-close-member-modal></div>
+    <form id="memberForm" class="modal-card">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">NOUVEAU MEMBRE</p>
+          <h3 id="memberModalTitle">Ajouter un membre</h3>
+        </div>
+        <button type="button" class="icon-btn" aria-label="Fermer" data-close-member-modal>×</button>
+      </div>
+      <label for="memberName">Nom</label>
+      <input id="memberName" type="text" required placeholder="Ex. Marie Dupont">
+      <label for="memberProfession">Profession</label>
+      <select id="memberProfession">
+        <option value="ÉTUDIANT">ÉTUDIANT</option>
+        <option value="TRAVAILLEUR">TRAVAILLEUR</option>
+        <option value="CHÔMEUR">CHÔMEUR</option>
+      </select>
+      <label for="memberStatus">Statut</label>
+      <select id="memberStatus">
+        <option value="ACTIF">ACTIF</option>
+        <option value="PARTI">PARTI</option>
+        <option value="PAUSE">PAUSE</option>
+        <option value="NON VERIFIÉ">NON VERIFIÉ</option>
+      </select>
+      <div class="modal-actions">
+        <button type="button" class="btn" data-close-member-modal>Annuler</button>
+        <button id="memberSubmitBtn" class="btn primary" type="submit">Ajouter le membre</button>
+      </div>
+    </form>
+  </div>
+
+  <template id="memberTemplate">
+    <div class="member-row">
+      <div class="member-main">
+        <div class="avatar"></div>
+        <div>
+          <strong class="member-name"></strong>
+          <span class="member-sub"></span>
+          <div class="member-tags"><span class="member-profession"></span><span class="member-status"></span></div>
+        </div>
+      </div>
+      <button class="btn member-edit" type="button">Modifier</button>
+      <div class="member-values">
+        <div><span>Disponible</span><strong class="member-available"></strong></div>
+        <div><span>Total contribué</span><strong class="member-contributed"></strong></div>
+        <div><span>Total dû</span><strong class="member-due"></strong></div>
+        <div><span>Total possédé</span><strong class="member-owned"></strong></div>
+      </div>
+    </div>
+  </template>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="site-footer-brand">
+        <strong class="site-footer-name">ClintFinTech</strong>
+        <span class="site-footer-purpose">Purpose · Young Family</span>
+      </div>
+      <button id="charteBtn" class="btn btn-charte" type="button" aria-haspopup="dialog" aria-controls="charterModal">charte</button>
+      <div class="site-footer-meta">
+        <span class="site-footer-founder">Founder · Clint Nguena</span>
+        <span class="site-footer-copy">© All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="charter.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

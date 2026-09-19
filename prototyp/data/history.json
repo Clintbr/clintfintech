@@ -1,0 +1,255 @@
+[
+  {
+    "timestamp": "2026-09-19T05:21:11.821Z",
+    "members": {
+      "1": {
+        "available": 50,
+        "owned": 50,
+        "due": 0,
+        "contributed": 50
+      },
+      "2": {
+        "available": 0,
+        "owned": 0,
+        "due": 0,
+        "contributed": 0
+      }
+    },
+    "meeting": {
+      "available": 50,
+      "outstanding": 0,
+      "profits": 0,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:21:19.054Z",
+    "members": {
+      "1": {
+        "available": 50,
+        "owned": 50,
+        "due": 0,
+        "contributed": 50
+      },
+      "2": {
+        "available": 50,
+        "owned": 50,
+        "due": 0,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 100,
+      "outstanding": 0,
+      "profits": 0,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:21:37.875Z",
+    "members": {
+      "1": {
+        "available": 30,
+        "owned": 52,
+        "due": 0,
+        "contributed": 50
+      },
+      "2": {
+        "available": 30,
+        "owned": 52,
+        "due": 44,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 60,
+      "outstanding": 44,
+      "profits": 40,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:21:39.408Z",
+    "members": {
+      "1": {
+        "available": 52,
+        "owned": 52,
+        "due": 0,
+        "contributed": 50
+      },
+      "2": {
+        "available": 52,
+        "owned": 52,
+        "due": 0,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 104,
+      "outstanding": 0,
+      "profits": -4,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:29:12.695Z",
+    "members": {
+      "1": {
+        "available": 27,
+        "owned": 54.5,
+        "due": 55,
+        "contributed": 50
+      },
+      "2": {
+        "available": 27,
+        "owned": 54.5,
+        "due": 0,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 54,
+      "outstanding": 55,
+      "profits": 46,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:39:12.078Z",
+    "members": {
+      "1": {
+        "available": 1027,
+        "owned": 1054.5,
+        "due": 55,
+        "contributed": 1050
+      },
+      "2": {
+        "available": 27,
+        "owned": 54.5,
+        "due": 0,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 1054,
+      "outstanding": 55,
+      "profits": 46,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:39:24.732Z",
+    "members": {
+      "1": {
+        "available": 1054.5,
+        "owned": 1054.5,
+        "due": 0,
+        "contributed": 1050
+      },
+      "2": {
+        "available": 54.5,
+        "owned": 54.5,
+        "due": 0,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 1109,
+      "outstanding": 0,
+      "profits": -9,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:39:51.913Z",
+    "members": {
+      "1": {
+        "available": 11054.5,
+        "owned": 11054.5,
+        "due": 0,
+        "contributed": 11050
+      },
+      "2": {
+        "available": 54.5,
+        "owned": 54.5,
+        "due": 0,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 11109,
+      "outstanding": 0,
+      "profits": -9,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:39:57.329Z",
+    "members": {
+      "1": {
+        "available": 1103.559321271041,
+        "owned": 11303.273516968224,
+        "due": 0,
+        "contributed": 11050
+      },
+      "2": {
+        "available": 5.440678728958503,
+        "owned": 55.72648303177604,
+        "due": 10250,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 1108.9999999999995,
+      "outstanding": 10250,
+      "profits": 9991,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T05:41:26.973Z",
+    "members": {
+      "1": {
+        "available": 11303.273516968224,
+        "owned": 11303.273516968224,
+        "due": 0,
+        "contributed": 11050
+      },
+      "2": {
+        "available": 55.72648303177604,
+        "owned": 55.72648303177604,
+        "due": 0,
+        "contributed": 50
+      }
+    },
+    "meeting": {
+      "available": 11359,
+      "outstanding": 0,
+      "profits": -258.9999999999998,
+      "memberCount": 2
+    }
+  },
+  {
+    "timestamp": "2026-09-19T06:06:47.909Z",
+    "members": {
+      "1": {
+        "available": 0,
+        "owned": 0,
+        "due": 0,
+        "contributed": 0
+      },
+      "2": {
+        "available": 0,
+        "owned": 0,
+        "due": 0,
+        "contributed": 0
+      }
+    },
+    "meeting": {
+      "available": 0,
+      "outstanding": 0,
+      "profits": 0,
+      "memberCount": 2
+    }
+  }
+]
